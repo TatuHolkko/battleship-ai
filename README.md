@@ -1,7 +1,7 @@
 # battleship-ai
 ## Goal
 The goal of this project is to build an artifical intelligence that plays battleship by calculating the probabilities of ships being in each square, assuming the opponent's ship placements are completely random.
-## The basis for choosing the best coordinate
+## The basis for choosing the best coordinate to bomb
 The probability of a certain squre being occupied by a ship is calculated with a recursive function that takes the following as parameters
 
 1. Matrix that describes squares that are blocked and squares that are confirmed hits
@@ -10,7 +10,7 @@ The probability of a certain squre being occupied by a ship is calculated with a
 
 2. The list of ships to be placed on the board
 
-and returns a matrix that contains the number of times each square was occupied through out all possible configurations of ships.
+and returns a matrix that contains the number of times each square was occupied through out all possible configurations of ships. The square with the highest number is the one with the highest probability of containing a ship.
 
 
 ## The algorithm
