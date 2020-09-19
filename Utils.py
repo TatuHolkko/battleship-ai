@@ -12,6 +12,9 @@ NOT_SHOT = 2
 SHIP = 1
 NOT_SHIP = 0
 
+HORIZONTAL = 1
+VERTICAL = 2
+
 '''
 explanations of the grid arguments "shots" and "ships"
 
@@ -46,18 +49,19 @@ def place_ship(ships, x, y, length, orientation):
 
         ships[y_][x_] = SHIP
 
-def can_place(ships, shots, x, y, length, orientation):
+def can_place(ships, x, y, length, orientation, shots=None):
     """
     Return true if a ship to be placed does not collide with other
     ships or missed shot squares
 
     Args:
         ships: ship matrix
-        shots: shot matrix
         x (int): x coordinate of top left end of the ship
         y (int): y coordinate of top left end of the ship
         length (int): length of the ship
         orientation (int): HORIZONTAL (1) or VERTICAL (2)
+        shots (optional): 
+            shot matrix, if omitted, only collisions will be checked
     """
     for i in range(length):
         x_ = x
@@ -66,7 +70,7 @@ def can_place(ships, shots, x, y, length, orientation):
             x_ = x + i
         else:
             y_ = y + i
-        if shots[y_][x_] == MISS:
+        if shots is not None and shots[y_][x_] == MISS:
             return False
         if ships[y_][x_] == SHIP:
             return False

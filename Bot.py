@@ -1,18 +1,19 @@
 import numpy as np
 import time
-from Utils import HIT, MISS, NOT_SHOT, SHIP, NOT_SHIP
+from random import randint, choice
+from Utils import HIT, MISS, NOT_SHOT, SHIP, NOT_SHIP, can_place, \
+    HORIZONTAL, VERTICAL, place_ship
 from Player import BattleShipPlayer
-
-HORIZONTAL = 1
-VERTICAL = 2
 
 #global limit variable to be properly assigned later
 LIMIT = 1
 
 class Bot(BattleShipPlayer):
 
-    def __init__(side):
-        ships = np.full([side, side], NOT_SHIP)
+    def __init__(side, ships_sizes):
+        self.ships = np.full([side, side], NOT_SHIP)
+        self.generate_board(side)
+        self.ship_sizes = ships_sizes
 
     def get_distribution(self, ships, shots, ship_sizes):
         """
@@ -65,3 +66,35 @@ class Bot(BattleShipPlayer):
                         distr += get_distribution(new_ships, shots, new_ship_sizes)
             
         return distr
+    
+    def generate_board(self, side):
+        for ship_length in self.ship_sizes:
+            while True:
+                x = randint(0, side - 1)
+                y = randint(0, side - 1)
+                orientation = choice([HORIZONTAL, VERTICAL])
+                if can_place(self.ships, x, y, ship_length, orientation):
+                    place_ship(self.ships, x, y, ship_length, orientation)
+                    break
+    
+    def get_board(self):
+        return self.ships
+
+    def get_bomb_coords(self, shots):
+        empty = np.full([len(self.ships), len(self.ships)], NOT_SHIP)
+        dist = self.get_distribution(empty, shots)
+        max_x = 0
+        max_y = 0
+        current_max = 0
+        for y in range(len(dist)):
+            for x in range(len(dist)):
+                if dist[y][x] > current_max:
+                    max_x = x
+                    max_y = y
+                    current_max = dist[y][x]
+                elif dist[y][x] == current_max:
+                    if randint(0,2) == 1:
+                        max_x = x
+                        max_y = y
+                        current_max = dist[y][x]
+        return [max_x, max_y]

@@ -6,7 +6,7 @@
     class BattleShipPlayer(abc.ABC):
         
         @abc.abstractclassmethod
-        def get_bomb_coords(shots):
+        def get_bomb_coords(self, shots):
             """
             This function returns coordinates at which this player
             wants to bomb, by looking at the given shot matrix
@@ -19,7 +19,7 @@
             """
             pass
 
-        def get_board():
+        def get_board(self):
             """
             Returns the ship matrix that the player wants to start playing with
 
