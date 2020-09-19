@@ -10,10 +10,10 @@ LIMIT = 1
 
 class Bot(BattleShipPlayer):
 
-    def __init__(side, ships_sizes):
+    def __init__(self, side, ships_sizes):
         self.ships = np.full([side, side], NOT_SHIP)
-        self.generate_board(side)
         self.ship_sizes = ships_sizes
+        self.generate_board(side)
 
     def get_distribution(self, ships, shots, ship_sizes):
         """

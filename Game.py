@@ -31,7 +31,7 @@ class Game():
         opponent = (self.player + 1) % 2
 
         if self.shots[self.player][y][x] != NOT_SHOT:
-            raise "Can not bomb the same coordinate",x,y,"twice."
+            raise "Can not bomb the same coordinate " + str(x) + ', ' +  str(y) + " twice."
         
         hit = False
         if boards[opponent][y][x] == SHIP:
