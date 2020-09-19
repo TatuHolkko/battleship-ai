@@ -1,4 +1,5 @@
 import numpy as np
+import time
 
 #constants for the integer grids:
 
@@ -160,8 +161,11 @@ def config_limit(width, height, ship_sizes):
     return total
 
 
-ships = np.full([5,5],NOT_SHIP)
-shots = np.full([5,5],NOT_SHOT)
-ship_sizes = [3]
-print("Limit of configurations with collisions:", config_limit(10,10, ship_sizes))
+ships = np.full([7,7],NOT_SHIP)
+shots = np.full([7,7],NOT_SHOT)
+ship_sizes = [2,3,4,5]
+
+start = time.time()
+print("Limit of configurations with collisions:", config_limit(7,7, ship_sizes))
 print(get_distribution(ships, shots, ship_sizes))
+print(time.time() - start)
