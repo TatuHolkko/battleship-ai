@@ -1,3 +1,5 @@
+import numpy as np
+
 #constants for the integer grids:
 
 #the values for misses, hits, ships and not ships are
@@ -69,3 +71,28 @@ def can_place(ships, shots, x, y, length, orientation):
         if ships[y_][x_] == SHIP:
             return False
     return True
+
+def config_limit(width, height, ship_sizes):
+        """
+        Return the amount of different configurations
+        if the ships are allowed to overlap
+
+        Args:
+            width (int): board width
+            height (int): board height
+            ship_sizes (Array): List of ship sizes to place
+        """
+        total = 1
+        for size in ship_sizes:
+            total *= (width - size + 1) * height + (height - size + 1) * width
+        return total
+
+def board_is_possible(self, ships, shots):
+        """
+        Return true if a configuration of ships and shots are possible
+
+        Args:
+            shots: shot matrix
+            ships: ship matrix
+        """
+        return not np.any(ships == shots)
