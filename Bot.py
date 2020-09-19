@@ -83,24 +83,6 @@ def place_ship(ships, x, y, length, orientation):
 
         ships[y_][x_] = SHIP
 
-def add_configuration(distribution, ships):
-    """
-    Add one to each square in the distribution that
-    is occupied by a ship
-
-    Args:
-        distribution (Array):
-            Matrix of integers representing the number
-            of times each square has been occupied by a ship
-
-        ships (Array):
-            ship matrix
-    """
-    #TODO: would be faster with numpy
-    for y in range(len(distribution)):
-        for x in range(len(distribution[y])):
-            distribution[y][x] += ships[y][x]
-
 def get_distribution(ships, shots, ship_sizes):
     """
     Returns a numpy array that contains in each square the number of times
