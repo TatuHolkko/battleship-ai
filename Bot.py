@@ -63,7 +63,7 @@ class Bot(BattleShipPlayer):
                             #add one to each square occupied by a ship
                             distr = distr + new_ships
                     else:
-                        distr += get_distribution(new_ships, shots, new_ship_sizes)
+                        distr += self.get_distribution(new_ships, shots, new_ship_sizes)
             
         return distr
     

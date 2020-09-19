@@ -10,7 +10,7 @@ SHIP_GRAPHICS = {
 SHOT_GRAPHICS = {
     NOT_SHOT: ' ',
     HIT: 'H',
-    MISS: 'M'
+    MISS: '-'
 }
 
 
@@ -73,9 +73,9 @@ class Game():
             int: the winner
         """
         if self.hp[0] == 0:
-            return 1
-        elif self.hp[1] == 0:
             return 2
+        elif self.hp[1] == 0:
+            return 1
         else:
             raise "Game is not over"
 
@@ -106,21 +106,21 @@ class Game():
 
     def print_matrix(self, data, dictionary, bomb=None):
         side = len(data)
-        print('  ', end='')
+        print(' ', end='')
         for n in range(side):
-            print(' ' + str(n), end='')
+            print('   ' + str(n), end='')
         print()
-        print('  +' + '-+'*side)
+        print('  +' + '---+'*side)
         for y in range(side):
             print(y,'|', end='')
             for x in range(side):
                 if bomb is not None and bomb[0] == x and bomb[1] == y:
-                    print(BOMB+ '|', end='')
+                    print(' ' + BOMB + ' |', end='')
                 else:
-                    print(dictionary[data[y][x]] + '|', end='')
+                    print(' ' + dictionary[data[y][x]] + ' |', end='')
             
             print()
-            print('  +' + '-+'*side)
+            print('  +' + '---+'*side)
             
             
 
@@ -134,5 +134,6 @@ class Game():
             if graphics:
                 self.bomb(bomb[0], bomb[1])
             self.next_turn()
+            input("Press any key to move to the next turn")
         print("Player", self.winner(), "you're winner!")
         

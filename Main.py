@@ -1,8 +1,8 @@
 from Bot import Bot
 from Game import Game
 
-bot1 = Bot(4,[2])
-bot2 = Bot(4,[2])
+bot1 = Bot(7,[2,3,4])
+bot2 = Bot(7,[2,3,4])
 
 game = Game(bot1, bot2)
 
