@@ -1,12 +1,25 @@
 import numpy as np
-from Utils import SHIP, NOT_SHOT, HIT, MISS
+from Utils import SHIP, NOT_SHIP, NOT_SHOT, HIT, MISS
 
 
+SHIP_GRAPHICS = {
+    SHIP: 'O',
+    NOT_SHIP: ' '
+}
+
+SHOT_GRAPHICS = {
+    NOT_SHOT: ' ',
+    HIT: 'H',
+    MISS: 'M'
+}
+
+
+BOMB = 'X'
 
 class Game():
 
-    def __init__(player1, player2):
-        ship_squares = sum(player1.get_board())
+    def __init__(self, player1, player2):
+        ship_squares = np.sum(player1.get_board())
         side = len(player1.get_board())
         self.hp = [ship_squares, ship_squares]
         self.boards = [player1.get_board(), player2.get_board()]
@@ -34,7 +47,7 @@ class Game():
             raise "Can not bomb the same coordinate " + str(x) + ', ' +  str(y) + " twice."
         
         hit = False
-        if boards[opponent][y][x] == SHIP:
+        if self.boards[opponent][y][x] == SHIP:
             self.hp[opponent] -= 1
             self.shots[self.player][y][x] = HIT
             hit = True
@@ -50,19 +63,19 @@ class Game():
         Returns:
             bool: true if either player has no unbombed ship squares left
         """
-        return self.hp[0] * self.hp[1] == 0
+        return (self.hp[0] * self.hp[1]) == 0
 
     def winner(self):
         """
-        Returns 0 if player 1 won, and 1 if player 2 won
+        Returns 1 if player 1 won, and 2 if player 2 won
 
         Returns:
             int: the winner
         """
         if self.hp[0] == 0:
-            return 0
-        elif self.hp[1] == 0:
             return 1
+        elif self.hp[1] == 0:
+            return 2
         else:
             raise "Game is not over"
 
@@ -72,9 +85,54 @@ class Game():
         """
         self.player = (self.player + 1) % 2
     
-    def run(self):
+    def print_pre_bomb(self):
+        print('-------------------------------')
+        pl =  str(self.player + 1)
+        opponent = (self.player + 1) % 2
+        opp = str(opponent + 1)
+        print("Player " + pl + " is playing...")
+        print("Shot history of player " + pl + ":")
+        self.print_matrix(self.shots[self.player], SHOT_GRAPHICS)
+        print("Ships of the opponent (player " + opp + "):")
+        self.print_matrix(self.boards[opponent], SHIP_GRAPHICS)
+        print("Player " + pl + " is thinking...")
+
+    def print_bomb(self, bomb):
+        pl =  str(self.player + 1)
+        opponent = (self.player + 1) % 2
+        opp = str(opponent + 1)
+        print("Player " + pl + " bombed the coordinates:", bomb[0], bomb[1])
+        self.print_matrix(self.boards[opponent], SHIP_GRAPHICS, bomb)
+
+    def print_matrix(self, data, dictionary, bomb=None):
+        side = len(data)
+        print('  ', end='')
+        for n in range(side):
+            print(' ' + str(n), end='')
+        print()
+        print('  +' + '-+'*side)
+        for y in range(side):
+            print(y,'|', end='')
+            for x in range(side):
+                if bomb is not None and bomb[0] == x and bomb[1] == y:
+                    print(BOMB+ '|', end='')
+                else:
+                    print(dictionary[data[y][x]] + '|', end='')
+            
+            print()
+            print('  +' + '-+'*side)
+            
+            
+
+    
+    def run(self, graphics=True):
         while not self.is_over():
-            bomb = self.players[player].get_bomb_coords(self.shots[player])
-            self.bomb(bomb[0], bomb[1])
+            if graphics:
+                self.print_pre_bomb()
+            bomb = self.players[self.player].get_bomb_coords(self.shots[self.player])
+            self.print_bomb(bomb)
+            if graphics:
+                self.bomb(bomb[0], bomb[1])
             self.next_turn()
-        print("Player", self.winner() + 1, ", you're winner!")
+        print("Player", self.winner(), "you're winner!")
+        

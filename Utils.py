@@ -63,17 +63,21 @@ def can_place(ships, x, y, length, orientation, shots=None):
         shots (optional): 
             shot matrix, if omitted, only collisions will be checked
     """
-    for i in range(length):
-        x_ = x
-        y_ = y
-        if orientation == HORIZONTAL:
-            x_ = x + i
-        else:
-            y_ = y + i
-        if shots is not None and shots[y_][x_] == MISS:
-            return False
-        if ships[y_][x_] == SHIP:
-            return False
+    try:
+        for i in range(length):
+            x_ = x
+            y_ = y
+            if orientation == HORIZONTAL:
+                x_ = x + i
+            else:
+                y_ = y + i
+            if shots is not None:
+                if shots[y_][x_] == MISS:
+                    return False
+            if ships[y_][x_] == SHIP:
+                return False
+    except IndexError:
+        return False
     return True
 
 def config_limit(width, height, ship_sizes):
@@ -91,7 +95,7 @@ def config_limit(width, height, ship_sizes):
             total *= (width - size + 1) * height + (height - size + 1) * width
         return total
 
-def board_is_possible(self, ships, shots):
+def board_is_possible(ships, shots):
         """
         Return true if a configuration of ships and shots are possible
 

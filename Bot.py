@@ -2,7 +2,7 @@ import numpy as np
 import time
 from random import randint, choice
 from Utils import HIT, MISS, NOT_SHOT, SHIP, NOT_SHIP, can_place, \
-    HORIZONTAL, VERTICAL, place_ship
+    HORIZONTAL, VERTICAL, place_ship, board_is_possible
 from Player import BattleShipPlayer
 
 #global limit variable to be properly assigned later
@@ -49,7 +49,7 @@ class Bot(BattleShipPlayer):
             for y in range(y_max):
                 for x in range(x_max):
                     
-                    if not can_place(ships, shots, x, y, ship_size, orientation):
+                    if not can_place(ships, x, y, ship_size, orientation, shots):
                         continue
                     
                     new_ships = np.copy(ships)
@@ -82,19 +82,21 @@ class Bot(BattleShipPlayer):
 
     def get_bomb_coords(self, shots):
         empty = np.full([len(self.ships), len(self.ships)], NOT_SHIP)
-        dist = self.get_distribution(empty, shots)
+        dist = self.get_distribution(empty, shots, self.ship_sizes)
         max_x = 0
         max_y = 0
         current_max = 0
         for y in range(len(dist)):
             for x in range(len(dist)):
                 if dist[y][x] > current_max:
-                    max_x = x
-                    max_y = y
-                    current_max = dist[y][x]
-                elif dist[y][x] == current_max:
-                    if randint(0,2) == 1:
+                    if shots[y][x] == NOT_SHOT:
                         max_x = x
                         max_y = y
                         current_max = dist[y][x]
+                elif dist[y][x] == current_max:
+                    if randint(0,2) == 1:
+                        if shots[y][x] == NOT_SHOT:
+                            max_x = x
+                            max_y = y
+                            current_max = dist[y][x]
         return [max_x, max_y]
