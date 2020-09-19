@@ -1,11 +1,22 @@
 import numpy as np
 
-HIT = 2
+#constants for the integer grids:
+
+#the values for misses, hits, ships and not ships are
+#chosen so that if ships and shots matrices equal at
+#any square, the configuration is invalid
 MISS = 1
+HIT = 0
+NOT_SHOT = 2
+
 SHIP = 1
+NOT_SHIP = 0
 
 HORIZONTAL = 1
 VERTICAL = 2
+
+#global limit variable to be properly assigned later
+LIMIT = 1
 
 '''
 explanations of the grid arguments "shots" and "ships"
@@ -27,13 +38,7 @@ def board_is_possible(ships, shots):
         shots: shot matrix
         ships: ship matrix
     """
-    for y in range(len(ships)):
-        for x in range(len(ships[y])):
-            if shots[y][x] == HIT and ships[y][x] != SHIP:
-                return False
-            if shots[y][x] == MISS and ships[y][x] == SHIP:
-                return False
-    return True
+    return not np.any(ships == shots)
 
 def can_place(ships, shots, x, y, length, orientation):
     """
@@ -130,11 +135,14 @@ def get_distribution(ships, shots, ship_sizes):
                         #the board is possible
                         #add one to each square occupied by a ship
                         distr = distr + new_ships
-                        print(new_ships)
                 else:
                     distr += get_distribution(new_ships, shots, new_ship_sizes)
         
     return distr
+
+def info(config_finished=True):
+    pass
+
 
 def config_limit(width, height, ship_sizes):
     """
@@ -152,9 +160,8 @@ def config_limit(width, height, ship_sizes):
     return total
 
 
-ships = np.zeros([10,10])
-shots = np.zeros([10,10])
-shots[5][5] = MISS
-ship_sizes = [2,3,4]
+ships = np.full([5,5],NOT_SHIP)
+shots = np.full([5,5],NOT_SHOT)
+ship_sizes = [3]
 print("Limit of configurations with collisions:", config_limit(10,10, ship_sizes))
 print(get_distribution(ships, shots, ship_sizes))
